@@ -263,12 +263,13 @@ void ofxImageSequenceVideo::update(float dt){
 
 					//TS_SCOPE("load 2 GPU");
 
+					string msg = "";
 					if(keepTexturesInGpuMem){ //load into frames vector
 						//TS_START_ACC("load tex KEEP");
 						if(!useDXTCompression){
 							curFrame.texture.loadData(curFrame.pixels);
 						}else{
-							ofxDXT::loadDataIntoTexture(curFrame.compressedPixels, curFrame.texture);
+							ofxDXT::loadDataIntoTexture(curFrame.compressedPixels, curFrame.texture, msg);
 						}
 						//TS_STOP_ACC("load tex KEEP");
 						curFrame.texState = TextureState::LOADED;
@@ -277,10 +278,11 @@ void ofxImageSequenceVideo::update(float dt){
 						if(!useDXTCompression){
 							tex.loadData(curFrame.pixels);
 						}else{
-							ofxDXT::loadDataIntoTexture(curFrame.compressedPixels, tex);
+							ofxDXT::loadDataIntoTexture(curFrame.compressedPixels, tex, msg);
 						}
 						//TS_STOP_ACC("load tex ONE-OFF");
 					}
+					if (!msg.empty()) ofLogNotice("ofxImageSequenceVideo") << "Frame " << "\"" << curFrame.filePath << "\"" << " experienced an error: " << msg;
 				}
 			}
 			curFrame.pixState = PixelState::LOADED;
@@ -342,7 +344,10 @@ void ofxImageSequenceVideo::update(float dt){
 			if(!useDXTCompression){
 				tex.loadData(currentPixels);
 			}else{
-				ofxDXT::loadDataIntoTexture(currentPixelsCompressed, tex);
+				string msg = "";
+				ofxDXT::loadDataIntoTexture(currentPixelsCompressed, tex, msg);
+				FrameInfo& curFrame = CURRENT_FRAME_ALT[currentFrame];
+				if (!msg.empty()) ofLogNotice("ofxImageSequenceVideo") << "Frame " << "\"" << curFrame.filePath << "\"" << " experienced an error: " << msg;
 			}
 			TS_STOP_ACC("load pix GPU");
 		}
