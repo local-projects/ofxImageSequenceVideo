@@ -282,7 +282,10 @@ void ofxImageSequenceVideo::update(float dt){
 						}
 						//TS_STOP_ACC("load tex ONE-OFF");
 					}
-					if (!msg.empty()) ofLogNotice("ofxImageSequenceVideo") << "Frame " << "\"" << curFrame.filePath << "\"" << " experienced an error: " << msg;
+					if (!msg.empty()){
+						ofLogNotice("ofxImageSequenceVideo") << "Frame " << "\"" << curFrame.filePath << "\"" << " experienced an error: " << msg;
+						textureLoadErrorOccurred = true;
+					}
 				}
 			}
 			curFrame.pixState = PixelState::LOADED;

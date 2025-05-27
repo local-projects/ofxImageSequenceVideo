@@ -130,6 +130,8 @@ public:
 
 	static char asciitolower(char in);
 
+	bool getTextureLoadErrorOccurred() { return textureLoadErrorOccurred; }
+
 protected:
 
 	static vector<string> getSupportedImageTypes(){ return{"tga", "gif", "jpeg", "jpg", "jp2", "bmp", "png", "tif", "tiff"};}
@@ -233,5 +235,6 @@ protected:
 	bool reportFileSize = true;
 	float fileSizeAvgKb = 0.0f;
 
+	bool textureLoadErrorOccurred = false;
 };
 
